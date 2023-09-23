@@ -29,7 +29,7 @@ resource "aws_security_group" "custom_sg" {
     from_port   = 0
     to_port     = 65535
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["172.0.0.0/32"]
     #cidr_blocks = ["10.0.0.0/16"] # restrict egress traffic to only specific destinations, such as an RDS database or an API endpoint
     description = "Allow outbound traffic"
   }
