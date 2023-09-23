@@ -122,5 +122,5 @@ variable "ingressCIDRblock" {
 }
 
 variable "destinationCIDRblock" {
-  default = "0.0.0.0/0"
+  default = "10.0.0.0/32"
 }
