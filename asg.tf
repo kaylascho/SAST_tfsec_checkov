@@ -18,13 +18,13 @@ resource "aws_autoscaling_group" "my_asg" {
   desired_capacity          = var.asg_desired_capacity
   force_delete              = var.asg_force_delete
 
-  tag {                         # tags must be passed in aws_autoscaling_group resource to be passed
-    key = "Name"
-    value = "eks_asg"
+  tag { # tags must be passed in aws_autoscaling_group resource to be passed
+    key                 = "Name"
+    value               = "eks_asg"
     propagate_at_launch = true
   }
 
-  
+
   launch_template {
     id      = aws_launch_template.my_web_template.id
     version = "$Latest"

@@ -11,6 +11,8 @@ terraform {
   }
 }
 
+
+
 # I decided to managed KMS key separately by creating via console and import it to a resource locally. 
 # This will help to manage as IAC.
 # I directly used the key arn in sqs queue.
