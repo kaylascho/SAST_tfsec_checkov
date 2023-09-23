@@ -186,3 +186,7 @@ resource "aws_route_table_association" "demo_vpc_association" {
   subnet_id      = aws_subnet.my_public_subnet.id
   route_table_id = aws_route_table.demo_vpc_route_table.id
 }
+
+resource "aws_default_security_group" "default" {     # remove both ingress and egress from default security group like this
+  vpc_id = aws_vpc.demo_vpc.id                       # That is, no association with default security group
+}

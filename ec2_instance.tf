@@ -49,9 +49,7 @@ data "aws_ami" "amzlinux2" {
 
 resource "aws_eip" "public_ip" {
   instance = aws_instance.ec2_instance.id  # Replace with the ID of the EC2 instance you want to associate with the EIP, or remove this line if not needed
-  vpc = true
+  #vpc = true     # will soon be deprecated
+  domain = "vpc"  # recommended to specify for VPC EIP
 }
 
-resource "aws_default_security_group" "default" {     # remove both ingress and egress from default security group like this
-  vpc_id = aws_vpc.issue_vpc.id                       # That is, no association with default security group
-}
