@@ -1,0 +1,108 @@
+name: 'Terraform - Production'
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+env:    # provide access and secret access key in repo secret.
+  AWS_ACCESS_KEY_ID: ${{ secrets. AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+       
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+      
+      - name: Set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' # install the python version needed
+      
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyhcl
+          pip install checkov
+      
+      - name: Install dependencies
+        run: |
+          apt-get update && apt-get install -y wget tar
+          wget https://github.com/tfsec/tfsec/releases/download/v1.28.1/tfsec-linux-amd64
+          chmod +x tfsec-linux-amd64
+          mv tfsec-linux-amd64 /usr/local/bin/tfsec
+          wget https://github.com/open-policy-agent/opa/releases/download/v0.34.1/opa_linux_amd64
+          chmod +x opa_linux_amd64
+          mv opa_linux_amd64 /usr/local/bin/opa
+          wget https://github.com/open-policy-agent/conftest/releases/download/v0.43.1/conftest_0.43.1_Linux_x86_64.tar.gz
+          tar xzf conftest_0.43.1_Linux_x86_64.tar.gz
+          chmod +x conftest
+          mv conftest /usr/local/bin/conftest
+          wget https://github.com/terraform-linters/tflint/releases/download/v0.30.0/tflint_linux_amd64.zip
+          unzip tflint_linux_amd64.zip
+          mv tflint /usr/local/bin/tflint
+          wget https://github.com/tmccombs/hcl2json/releases/download/v0.5.0/hcl2json_linux_amd64
+          chmod +x hcl2json_linux_amd64
+          mv hcl2json_linux_amd64 /usr/local/bin/hcl2json
+        
+      - name: execute py script
+        run: python lint.py
+    
+      - name: Terraform format
+        #id: format
+        run: terraform fmt -check
+     
+      - name: Run tfsec
+        run: tfsec .
+
+      - name: Run Terraform Scan
+        run: |
+          tflint .
+      
+      - name: Terraform init
+        #id: init
+        run: terraform init -reconfigure -backend=false
+
+      - name: Terraform format
+        #id: format
+        run: terraform fmt
+     
+      - name: Terraform validate
+        #id: validate
+        run: terraform validate
+
+      - name: Terraform plan
+        #id: plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform show
+        #id: show
+        run: terraform show -json ./tfplan > tfplan.json
+
+      - name: run checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+            directory: .
+            soft_fail: true
+            framework: terraform
+
+      - name: Run Checkov
+        run: docker run --volume "${{ env.GITHUB_WORKSPACE }}":/tf bridgecrew/checkov -f tfplan.json --soft-fail
+      
+      - name: Run Conftest
+        run: conftest test ./tfplan.json
+
+      - name: run OPA 
+        run: |
+          opa exec --decision terraform/analysis/authz --bundle tf.plan.json 
+          opa eval -fail-defined --format pretty --input tf.plan.json --data policy/ 'data.play.deny[x]' 
+
