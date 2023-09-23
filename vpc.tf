@@ -31,6 +31,7 @@ resource "aws_security_group" "custom_sg" {
   }
 }
 
+/*
 resource "aws_default_security_group" "default" {     # This is required for default security group and can be modified accordingly
                                                        # Ensure that default security group is not connected to your vpc
 
@@ -51,7 +52,7 @@ resource "aws_default_security_group" "default" {     # This is required for def
   }
 }
 
-
+*/
 
 resource "aws_subnet" "my_private_subnet" {
   vpc_id                  = aws_vpc.demo_vpc.id
