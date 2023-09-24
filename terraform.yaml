@@ -74,7 +74,8 @@ jobs:
 
       - name: Terraform format
         #id: format
-        run: terraform fmt
+        #run: terraform fmt
+        run: terraform fmt --recursive --check
      
       - name: Terraform validate
         #id: validate
@@ -95,9 +96,8 @@ jobs:
             soft_fail: true
             framework: terraform
 
-      - name: Run Checkov       # SAST (Static Application Security Testing) package for Terraform, to stop non-compliant resources being deployed into your cloud provider of choice
-        #run: docker run --volume "${{ env.GITHUB_WORKSPACE }}":/tf bridgecrew/checkov -f tfplan.json --soft-fail
-        run: docker run --volume "${{ env.GITHUB_WORKSPACE }}/tf:/tf" bridgecrew/checkov -f tfplan.json --soft-fail
+      #- name: Run Checkov       # SAST (Static Application Security Testing) package for Terraform, to stop non-compliant resources being deployed into your cloud provider of choice
+      #  run: docker run --volume "${{ env.GITHUB_WORKSPACE }}":/tf bridgecrew/checkov -f tfplan.json --soft-fail
 
       
       - name: Run Conftest
