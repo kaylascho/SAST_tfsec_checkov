@@ -48,9 +48,9 @@ jobs:
           wget https://github.com/tmccombs/hcl2json/releases/download/v0.5.0/hcl2json_linux_amd64
           chmod +x hcl2json_linux_amd64
           mv hcl2json_linux_amd64 /usr/local/bin/hcl2json
-          wget https://github.com/open-policy-agent/opa/releases/download/v0.34.1/opa_linux_amd64
-          chmod +x opa_linux_amd64
-          mv opa_linux_amd64 /usr/local/bin/opa
+          #wget https://github.com/open-policy-agent/opa/releases/download/v0.34.1/opa_linux_amd64
+          #chmod +x opa_linux_amd64
+          #mv opa_linux_amd64 /usr/local/bin/opa
           wget https://github.com/open-policy-agent/conftest/releases/download/v0.43.1/conftest_0.43.1_Linux_x86_64.tar.gz
           tar xzf conftest_0.43.1_Linux_x86_64.tar.gz
           chmod +x conftest
@@ -97,14 +97,20 @@ jobs:
       #  run: docker run --volume "${{ env.GITHUB_WORKSPACE }}":/tf bridgecrew/checkov -f tfplan.json --soft-fail
 
       - name: Debug tfplan.json 
-        run: |
-          cat tfplan.json
-          opa version
+        run: cat tfplan.json
 
-      - name: run OPA 
+
+      - name: Setup OPA
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      #- name: Run OPA Tests
+      #  run: opa test tests/*.rego -v
+
+      - name: run OPA Tests
         run: |
           #opa exec --decision terraform/analysis/authz --bundle tf.plan.json 
-          #opa eval -fail-defined --format pretty --input tf.plan.json --data policy/ 'data.play.deny[x]' 
           opa eval --fail-defined --format pretty --input tfplan.json --data policy/ 'data.play.deny[x]'
           
       - name: Run Conftest
