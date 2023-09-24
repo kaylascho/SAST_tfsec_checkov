@@ -1,15 +1,4 @@
 package aws_resources
-
-# Check if a resource has tags
-has_tags {
-    resource.tags[_]
-}
-
-# Check if a resource is encrypted
-is_encrypted {
-    resource.encrypted == true
-}
-
 # Define a rule to check VPC resources
 check_vpc {
     resource := input.aws_vpc[_]
