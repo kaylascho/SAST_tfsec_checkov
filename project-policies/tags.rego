@@ -1,3 +1,4 @@
+package project_policies
 
 #entry point for tags enforcement 
 checkTags(resource) {

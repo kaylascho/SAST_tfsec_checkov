@@ -1,4 +1,4 @@
-package policy
+package project_policies
 
 # Define a function to check if a resource has tags
 checkTags(resource) {
