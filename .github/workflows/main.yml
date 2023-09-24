@@ -105,14 +105,12 @@ jobs:
         with:
           version: latest
 
-      #- name: Run OPA Tests
-      #  run: opa test project-policies/*.rego -v
 
       - name: run OPA Tests
         run: |
           #opa exec --decision terraform/analysis/authz --bundle tf.plan.json 
           #opa eval --fail-defined --format pretty --input tfplan.json --data policy/ 'data.play.deny[x]'
-          opa eval --fail-defined -d project-policies/*.rego -i tfplan.json -f pretty
+          opa eval --fail-defined -d project-policies/ -i tfplan.json -f pretty
 
           
       #- name: Run Conftest
