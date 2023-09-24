@@ -100,7 +100,7 @@ jobs:
         run: cat tfplan.json
 
       - name: conftest 1
-        run: ./conftest test --no-color ${{ env.WORKING_DIR }}/tfplan.json
+        run: ./conftest test --no-color tfplan.json
 
       - name: Run Conftest
         #run: conftest test ./tfplan.json
