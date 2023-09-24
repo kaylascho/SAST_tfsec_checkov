@@ -89,6 +89,14 @@ jobs:
         #id: show
         run: terraform show -json ./tfplan > tfplan.json
 
+      - name: Run Conftest
+        run: conftest test ./tfplan.json
+
+      - name: run OPA 
+        run: |
+          opa exec --decision terraform/analysis/authz --bundle tf.plan.json 
+          opa eval -fail-defined --format pretty --input tf.plan.json --data policy/ 'data.play.deny[x]' 
+
       #- name: run checkov
       #  uses: bridgecrewio/checkov-action@master
       #  with:
@@ -100,11 +108,5 @@ jobs:
       #  run: docker run --volume "${{ env.GITHUB_WORKSPACE }}":/tf bridgecrew/checkov -f tfplan.json --soft-fail
 
       
-      - name: Run Conftest
-        run: conftest test ./tfplan.json
 
-      - name: run OPA 
-        run: |
-          opa exec --decision terraform/analysis/authz --bundle tf.plan.json 
-          opa eval -fail-defined --format pretty --input tf.plan.json --data policy/ 'data.play.deny[x]' 
 
