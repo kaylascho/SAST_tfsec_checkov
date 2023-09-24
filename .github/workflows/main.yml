@@ -96,12 +96,14 @@ jobs:
       #- name: Run Checkov
       #  run: docker run --volume "${{ env.GITHUB_WORKSPACE }}":/tf bridgecrew/checkov -f tfplan.json --soft-fail
 
-      - name: Debug tfplan.json
-        run: cat tfplan.json
+      - name: Debug tfplan.json 
+        run: |
+          cat tfplan.json
+          opa version
 
       - name: run OPA 
         run: |
-          opa exec --decision terraform/analysis/authz --bundle tf.plan.json 
+          #opa exec --decision terraform/analysis/authz --bundle tf.plan.json 
           #opa eval -fail-defined --format pretty --input tf.plan.json --data policy/ 'data.play.deny[x]' 
           opa eval -fail-defined --format pretty --input tfplan.json --data policy/ 'data.play.deny[x]'
           
