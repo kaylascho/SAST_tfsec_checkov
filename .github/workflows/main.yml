@@ -96,6 +96,9 @@ jobs:
       #- name: Run Checkov
       #  run: docker run --volume "${{ env.GITHUB_WORKSPACE }}":/tf bridgecrew/checkov -f tfplan.json --soft-fail
 
+      - name: Debug tfplan.json
+        run: cat tfplan.json
+        
       - name: Run Conftest
         #run: conftest test ./tfplan.json
         run: conftest test tfplan.json
