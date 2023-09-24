@@ -1,29 +1,25 @@
 package aws_resources
 # Define a rule to check VPC resources
 check_vpc {
-    resource := input.aws_vpc[_]
-    has_tags
-    is_encrypted
+    input.resource.tags[_]
+    input.resource.encrypted == true
 }
 
 # Define a rule to check subnet resources
 check_subnet {
-    resource := input.aws_subnet[_]
-    has_tags
-    is_encrypted
+    input.resource.tags[_]
+    input.resource.encrypted == true
 }
 
 # Define a rule to check EC2 instances
 check_ec2 {
-    resource := input.aws_instance[_]
-    has_tags
-    is_encrypted
+    input.resource.tags[_]
+    input.resource.encrypted == true
 }
 
 # Define a rule to check security groups for VPC
 check_security_group_vpc {
-    resource := input.aws_security_group[_]
-    has_tags
+    input.aws_security_group == true
 }
 
 # Define a rule to check security groups for EC2
