@@ -102,8 +102,8 @@ jobs:
       - name: run OPA 
         run: |
           opa exec --decision terraform/analysis/authz --bundle tf.plan.json 
-          opa eval -fail-defined --format pretty --input tf.plan.json --data policy/ 'data.play.deny[x]' 
-
+          #opa eval -fail-defined --format pretty --input tf.plan.json --data policy/ 'data.play.deny[x]' 
+          opa eval -fail-defined --format pretty --input tfplan.json --data policy/ 'data.play.deny[x]'
+          
       - name: Run Conftest
-        #run: conftest test ./tfplan.json
-        run: conftest test tfplan.json
+        run: conftest test ./tfplan.json
