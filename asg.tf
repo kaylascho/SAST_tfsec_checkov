@@ -20,7 +20,7 @@ resource "aws_autoscaling_group" "my_asg" {
 
   tag { # tags must be passed in aws_autoscaling_group resource to be passed
     key                 = "Name"
-    value               = "eks_asg"
+    value               = "walmart_asg"
     propagate_at_launch = true
   }
 

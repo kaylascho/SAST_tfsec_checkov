@@ -89,13 +89,14 @@ jobs:
         run: terraform show -json ./tfplan > tfplan.json
 
       - name: run checkov
-        uses: bridgecrewio/checkov-action@master
+        #uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@v12
         with:
             directory: .
             soft_fail: true
             framework: terraform
 
-      - name: Run Checkov
+      - name: Run Checkov       # SAST (Static Application Security Testing) package for Terraform, to stop non-compliant resources being deployed into your cloud provider of choice
         run: docker run --volume "${{ env.GITHUB_WORKSPACE }}":/tf bridgecrew/checkov -f tfplan.json --soft-fail
       
       - name: Run Conftest
