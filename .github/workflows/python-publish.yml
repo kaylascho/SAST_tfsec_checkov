@@ -37,3 +37,7 @@ jobs:
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
+
+
+If your current directory is "/home/user/documents/",
+"../policies" refers to "/home/user/policies/".
