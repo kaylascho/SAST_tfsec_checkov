@@ -106,6 +106,9 @@ jobs:
           version: latest
 
 
+      - name: Run Conftest
+        run: conftest test ./tfplan.json -p ../project-policies
+
       - name: run OPA Tests
         run: |
           opa exec --decision project-policies.deny --bundle tf.plan.json
@@ -113,6 +116,4 @@ jobs:
           #opa eval --fail-defined --format pretty --input tfplan.json --data policy/ 'data.play.deny[x]'
           #opa eval --fail-defined -d project-policies/ -i tfplan.json -f pretty 'data.play.deny[x]'
 
-          
-      #- name: Run Conftest
-      #  run: conftest test ./tfplan.json
+        
